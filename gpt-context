@@ -24,44 +24,51 @@ process_arguments() {
     fi
     while [ $# -gt 0 ]; do
         case $1 in
-            --help)
-                show_help
-                exit 0
-                ;;
-            --version)
-                show_version
-                exit 0
-                ;;
-            --input)
-                if [ -n "$2" ]; then
-                    INPUT=$2
-                    shift
-                else
-                    echo "Error: --input requires an argument."
-                    exit 1
-                fi
-                ;;
-            --output)
-                if [ -n "$2" ]; then
-                    OUTPUT="$(pwd)/$2"
-                    shift
-                else
-                    echo "Error: --output requires an argument."
-                    exit 1
-                fi
-                ;;
-            *)
-                echo "Unknown option: $1"
-                show_help
+        --help)
+            show_help
+            exit 0
+            ;;
+        --version)
+            show_version
+            exit 0
+            ;;
+        --input)
+            if [ -n "$2" ]; then
+                INPUT=$2
+                shift
+            else
+                echo "Error: --input requires an argument."
                 exit 1
-                ;;
+            fi
+            ;;
+        --output)
+            if [ -n "$2" ]; then
+                OUTPUT="$(pwd)/$2"
+                shift
+            else
+                echo "Error: --output requires an argument."
+                exit 1
+            fi
+            ;;
+        *)
+            echo "Unknown option: $1"
+            show_help
+            exit 1
+            ;;
         esac
         shift
     done
 }
 
 generate_ignored_directories() {
-    IGNORED="-name $OUTPUT -o -name .git -o -name yarn.lock -o -name package-lock.json -o -path ${OUTPUT}"
+    if [ "${OUTPUT#*/}" != "$OUTPUT" ]; then
+        IGNORED="-wholename $OUTPUT"
+    else
+        IGNORED="-name $OUTPUT"
+    fi
+
+    IGNORED="$IGNORED -o -name .git -o -name yarn.lock -o -name package-lock.json -o -path ${OUTPUT}"
+
     while IFS= read -r line; do
         trimmed_line=$(echo "$line" | sed 's/^[ \t]*//;s/[ \t]*$//;s/[\/]*$//')
 
@@ -76,27 +83,27 @@ generate_ignored_directories() {
                 IGNORED="$IGNORED -o -name ${trimmed_line}"
             fi
         fi
-    done < "$INPUT/.gitignore"
+    done <"$INPUT/.gitignore"
 }
 
 generate_directory_structure() {
-    echo "  <FILE_STRUCTURE>" >> "$OUTPUT"
+    echo "  <FILE_STRUCTURE>" >>"$OUTPUT"
     find "$INPUT" \( $IGNORED \) -prune -o -type f -print | while read -r PATH; do
-       echo "    <FILE path=\"$PATH\"></FILE>" >> "$OUTPUT"
+        echo "    <FILE path=\"$PATH\"></FILE>" >>"$OUTPUT"
     done
-    echo "  </FILE_STRUCTURE>" >> "$OUTPUT"
+    echo "  </FILE_STRUCTURE>" >>"$OUTPUT"
 }
 
 generate_file_content_nodes() {
-    echo "  <FILES>" >> "$OUTPUT"
+    echo "  <FILES>" >>"$OUTPUT"
     find "$INPUT" \( $IGNORED \) -prune -o -type f -print | while read -r FILE_PATH; do
         if [ "$(file -i "$FILE_PATH" | awk -F'charset=' '{print $2}')" != "binary" ]; then
-            echo "    <FILE path=\"$FILE_PATH\">" >> "$OUTPUT"
-            sed -e 's/^/    /' "$FILE_PATH" >> "$OUTPUT"
-            echo "    </FILE>" >> "$OUTPUT"
+            echo "    <FILE path=\"$FILE_PATH\">" >>"$OUTPUT"
+            sed -e 's/^/    /' "$FILE_PATH" >>"$OUTPUT"
+            echo "    </FILE>" >>"$OUTPUT"
         fi
     done
-    echo "  </FILES>" >> "$OUTPUT"
+    echo "  </FILES>" >>"$OUTPUT"
 }
 
 check_if_git_repository() {
@@ -111,17 +118,15 @@ process_arguments "$@"
 
 check_if_git_repository
 
-
 echo "Generating GPT Context for GIT repository: $INPUT"
 
-> "$OUTPUT"
+>"$OUTPUT"
 
-
-echo "<REPOSITORY name=\"${REPOSITORY}\">" >> "$OUTPUT"
+echo "<REPOSITORY name=\"${REPOSITORY}\">" >>"$OUTPUT"
 generate_ignored_directories
 generate_directory_structure
 generate_file_content_nodes
 
-echo "</REPOSITORY>" >> "$OUTPUT"
+echo "</REPOSITORY>" >>"$OUTPUT"
 
 echo "GPT Context saved to: $OUTPUT"
