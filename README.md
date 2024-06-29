@@ -36,7 +36,7 @@ It's necessary to copy the script somewhere that is on your path as defined in y
 
 ```
 mkdir ~/bin
-chmod +x ~/bin/gpt-context
+chmod +x gpt-context
 mv gpt-context ~/bin/gpt-context
 ```
 
