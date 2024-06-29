@@ -45,16 +45,18 @@ If ~/bin is not on your path, you can update your path by adding the following l
 ```
 export PATH="$HOME/bin:$PATH"
 ```
-Now, after sourcing your shell profile, e.g. `source ~/zshrc` or `source ~/bashrc` the `gpt-context` command can be executed from any directory.
+Now, after sourcing your shell profile, e.g. `source ~/.zshrc` or `source ~/.bashrc` the `gpt-context` command can be executed from any directory.
 
 ## Usage
 
+```
 Usage: $0 [--help] [--version] [--input PATH] [--output OUTPUT]
   Defaults input and output to the current directory if not provided.
   --help         Show this help message
   --version      Show version information
   --input  PATH  Git repository path
   --output OUTPUT The path for the output (defaults to gpt_context.txt)
+```
 
 Example commands:
 
