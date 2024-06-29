@@ -1,9 +1,13 @@
 # gpt-context
 
-https://github.com/DanielHaroldLane/gpt-context/assets/20723724/0e9519af-f1ef-46b7-ac85-54721729489f
+What does it do? It generates a text representation of a git repository that can be used with LLM's (Large Language Models) such as Chat GPT! Check out the demo below.
 
-https://github.com/DanielHaroldLane/gpt-context/assets/20723724/cdf5fbbd-2cef-4112-b55a-c228d6f170ed
+https://github.com/DanielHaroldLane/gpt-context/assets/20723724/410244e6-08a2-43c5-b788-e21e65872932
 
+How is this useful? Well, you can use it to provide ChatGPT and other LLM's with structured data describing the layout of git repositories and the code they contain. That means you can use it with Chat GPT without the need for a paid for API key, or you can ask other LLM's for info about the code you want to summarize.
+Check it out with a real world example and Chat GPT.
+
+https://github.com/DanielHaroldLane/gpt-context/assets/20723724/206d9b4b-1a15-4bb9-98aa-122b893d9db5
 
 
 ## Description/Purpose
