@@ -1,5 +1,11 @@
 # gpt-context
 
+https://github.com/DanielHaroldLane/gpt-context/assets/20723724/0e9519af-f1ef-46b7-ac85-54721729489f
+
+https://github.com/DanielHaroldLane/gpt-context/assets/20723724/cdf5fbbd-2cef-4112-b55a-c228d6f170ed
+
+
+
 ## Description/Purpose
 
 The purpose of this shell script is to allow developers to bundle up git repositories of code into a format that is easy for Chat GPT to understand and parse. This enables a developer to upload their repository in plain text and then ask GPT questions about the code, structure, tooling, etc in the repository. There is no need for an OpenAI key to do this and the output file can be used with any LLM, it isn't restricted to Chat GPT.
